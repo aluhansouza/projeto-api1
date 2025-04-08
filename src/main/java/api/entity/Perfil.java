@@ -2,13 +2,24 @@ package api.entity;
 
 import java.io.Serializable;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
-@Table(name = "perfil")
+@Table(name = "perfis")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Perfil implements Serializable {
 	
@@ -17,10 +28,11 @@ public class Perfil implements Serializable {
 	
 	
 	@Id
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id", nullable = false)
 	private Long id;
 	
-	@Column(name="nome")
+	@Column(name="nome", nullable = false)
 	private String nome;
 	
 	
