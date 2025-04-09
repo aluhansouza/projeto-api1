@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Table(name = "perfis")
+@Table(name = "tb_perfis")
 @Getter
 @Setter
 @NoArgsConstructor
