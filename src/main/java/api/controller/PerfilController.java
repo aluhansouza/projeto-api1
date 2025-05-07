@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import api.entity.Perfil;
+import api.dto.PerfilAtualizaDTO;
+import api.dto.PerfilCadastroDTO;
+import api.dto.PerfilDTO;
 import api.service.PerfilService;
 
 @RestController
@@ -24,32 +26,63 @@ public class PerfilController {
 
     @Autowired
     private PerfilService perfilService;
-
-    @GetMapping
-    public List<Perfil> listarTodos() {
-        return perfilService.listarTodos();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Perfil> buscarPorId(@PathVariable Long id) {
-        return perfilService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    
+    
+    // Criar perfil
     @PostMapping
-    public Perfil salvar(@RequestBody Perfil perfil) {
-        return perfilService.salvar(perfil);
+    public ResponseEntity<PerfilDTO> cadastrar(@RequestBody PerfilCadastroDTO perfilCadastroDto) {
+        PerfilDTO novoPerfil = perfilService.cadastrar(perfilCadastroDto);
+        return ResponseEntity.ok(novoPerfil);
     }
 
+    // Atualizar perfil
     @PutMapping("/{id}")
-    public Perfil atualizar(@PathVariable Long id, @RequestBody Perfil perfil) {
-        return perfilService.atualizar(id, perfil);
+    public ResponseEntity<PerfilDTO> atualizarPerfil(@PathVariable Long id, @RequestBody PerfilAtualizaDTO perfilAtualizaDTO) {
+        PerfilDTO perfilAtualizado = perfilService.atualizar(id, perfilAtualizaDTO);
+        return ResponseEntity.ok(perfilAtualizado);
     }
 
+    // Listar todos os perfis
+    @GetMapping
+    public ResponseEntity<List<PerfilDTO>> listarPerfis() {
+        List<PerfilDTO> perfis = perfilService.listarTodos();
+        return ResponseEntity.ok(perfis);
+    }
+
+    // Buscar por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<PerfilDTO> buscarPorId(@PathVariable Long id) {
+        PerfilDTO perfil = perfilService.buscarPorId(id);
+        return ResponseEntity.ok(perfil);
+    }
+
+    // Excluir perfil
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> excluirPerfil(@PathVariable Long id) {
         perfilService.excluir(id);
         return ResponseEntity.noContent().build();
     }
+    
+    
+    
+    
+	/*
+	 * @GetMapping public List<Perfil> listarTodos() { return
+	 * perfilService.listarTodos(); }
+	 * 
+	 * @GetMapping("/{id}") public ResponseEntity<Perfil> buscarPorId(@PathVariable
+	 * Long id) { return perfilService.buscarPorId(id) .map(ResponseEntity::ok)
+	 * .orElse(ResponseEntity.notFound().build()); }
+	 * 
+	 * @PostMapping public Perfil salvar(@RequestBody Perfil perfil) { return
+	 * perfilService.salvar(perfil); }
+	 * 
+	 * @PutMapping("/{id}") public Perfil atualizar(@PathVariable Long
+	 * id, @RequestBody Perfil perfil) { return perfilService.atualizar(id, perfil);
+	 * }
+	 * 
+	 * @DeleteMapping("/{id}") public ResponseEntity<Void> deletar(@PathVariable
+	 * Long id) { perfilService.excluir(id); return
+	 * ResponseEntity.noContent().build(); }
+	 */
 }

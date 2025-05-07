@@ -1,19 +1,16 @@
 package api.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import api.entity.Perfil;
+import api.dto.PerfilAtualizaDTO;
+import api.dto.PerfilCadastroDTO;
+import api.dto.PerfilDTO;
 
 public interface PerfilService {
-	
-	List<Perfil> listarTodos();
-
-	Optional<Perfil> buscarPorId(Long id);
-
-	Perfil salvar(Perfil perfil);
-
-	Perfil atualizar(Long id, Perfil perfil);
-
-	void excluir(Long id);
+    
+    List<PerfilDTO> listarTodos(); // Lista todos os perfis
+    PerfilDTO buscarPorId(Long id); // Busca perfil por ID
+    PerfilDTO cadastrar(PerfilCadastroDTO dto); // Cria um novo perfil
+    PerfilDTO atualizar(Long id, PerfilAtualizaDTO dto); // Atualiza um perfil existente
+    void excluir(Long id); // Exclui um perfil pelo ID
 }

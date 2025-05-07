@@ -3,6 +3,7 @@ package api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,43 +15,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import api.entity.Usuario;
+import api.dto.UsuarioAtualizaDTO;
+import api.dto.UsuarioCadastroDTO;
+import api.dto.UsuarioDTO;
 import api.service.UsuarioService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
-    @Autowired
+	@Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping
-    public List<Usuario> listarTodos() {
-        return usuarioService.listarTodos();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
-    public Usuario salvar(@RequestBody Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioCadastroDTO dto) {
+        UsuarioDTO usuarioCadastrado = usuarioService.cadastrar(dto);
+        return new ResponseEntity<>(usuarioCadastrado, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public Usuario atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return usuarioService.atualizar(id, usuario);
+    public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioAtualizaDTO dto) {
+        UsuarioDTO usuarioAtualizado = usuarioService.atualizar(id, dto);
+        return ResponseEntity.ok(usuarioAtualizado);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long id) {
+        UsuarioDTO usuario = usuarioService.buscarPorId(id);
+        return ResponseEntity.ok(usuario);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> listarTodos() {
+        List<UsuarioDTO> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(usuarios);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        usuarioService.excluir
-        (id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        usuarioService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 }
