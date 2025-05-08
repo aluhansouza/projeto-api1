@@ -1,8 +1,8 @@
 package api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import api.dto.UsuarioAtualizaDTO;
 import api.dto.UsuarioCadastroDTO;
 import api.dto.UsuarioDTO;
+import api.response.PageResponse;
 import api.service.UsuarioService;
 import jakarta.validation.Valid;
 
@@ -47,11 +49,31 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    //@GetMapping
+	/*
+	 * public ResponseEntity<List<UsuarioDTO>> listarTodos() { List<UsuarioDTO>
+	 * usuarios = usuarioService.listarTodos(); return ResponseEntity.ok(usuarios);
+	 * }
+	 */
+    
+	/*
+	 * @GetMapping public ResponseEntity<PageResponse<UsuarioDTO>> listar(Pageable
+	 * pageable) { Page<UsuarioDTO> page = usuarioService.listarPaginado(pageable);
+	 * return ResponseEntity.ok(new PageResponse<>(page)); }
+	 */
+    
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> listarTodos() {
-        List<UsuarioDTO> usuarios = usuarioService.listarTodos();
-        return ResponseEntity.ok(usuarios);
+    public ResponseEntity<PageResponse<UsuarioDTO>> listar(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String perfilNome,
+            Pageable pageable) {
+
+        Page<UsuarioDTO> page = usuarioService.listarFiltrado(nome, email, status, perfilNome, pageable);
+        return ResponseEntity.ok(new PageResponse<>(page));
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {

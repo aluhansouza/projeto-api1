@@ -2,10 +2,12 @@ package api.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import api.dto.UsuarioAtualizaDTO;
 import api.dto.UsuarioCadastroDTO;
 import api.dto.UsuarioDTO;
-import api.entity.Usuario;
 
 public interface UsuarioService {
 	
@@ -20,6 +22,11 @@ public interface UsuarioService {
     UsuarioDTO cadastrar(UsuarioCadastroDTO usuarioCadastroDto);
     UsuarioDTO atualizar(Long id, UsuarioAtualizaDTO usuarioAtualizaDTO);
     void excluir(Long id);
+    
+    
+    Page<UsuarioDTO> listarPaginado(Pageable pageable); 
+    
+    Page<UsuarioDTO> listarFiltrado(String nome, String email, String status, String perfilNome, Pageable pageable);
     
     
     

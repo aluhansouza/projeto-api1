@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import api.dto.PerfilAtualizaDTO;
@@ -68,5 +70,11 @@ public class PerfilServiceImpl implements PerfilService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Perfil não encontrado"));
 
         perfilRepository.delete(perfilExistente);
+    }
+    
+    @Override
+    public Page<PerfilDTO> listarPaginado(Pageable pageable) {
+        return perfilRepository.findAll(pageable)
+            .map(perfil -> perfilMapper.toDTO(perfil));
     }
 }

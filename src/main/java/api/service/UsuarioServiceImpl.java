@@ -3,6 +3,9 @@ package api.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,7 @@ import api.exception.RecursoNaoEncontradoException;
 import api.mapper.UsuarioMapper;
 import api.repository.PerfilRepository;
 import api.repository.UsuarioRepository;
+import api.specification.UsuarioSpecification;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -89,6 +93,27 @@ public class UsuarioServiceImpl implements UsuarioService {
 	            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
 	    usuarioRepository.delete(usuario);
+	}
+
+
+
+	@Override
+	public Page<UsuarioDTO> listarPaginado(Pageable pageable) {
+	    return usuarioRepository.findAll(pageable)
+	        .map(usuario -> usuarioMapper.toDTO(usuario)); // ou manual se não estiver usando MapStruct ainda
+	}
+	
+	
+	@Override
+	public Page<UsuarioDTO> listarFiltrado(String nome, String email, String status, String perfilNome, Pageable pageable) {
+	    Specification<Usuario> spec = Specification
+	        .where(UsuarioSpecification.nomeContem(nome))
+	        .and(UsuarioSpecification.emailContem(email))
+	        .and(UsuarioSpecification.statusIgual(status))
+	        .and(UsuarioSpecification.perfilIgual(perfilNome));
+
+	    return usuarioRepository.findAll(spec, pageable)
+	        .map(usuario -> usuarioMapper.toDTO(usuario)); // ou seu mapper atual
 	}
 
 
