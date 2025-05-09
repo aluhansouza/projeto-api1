@@ -64,12 +64,12 @@ public class UsuarioController {
     
     @GetMapping
     public ResponseEntity<PageResponse<UsuarioDTO>> listar(
-            @RequestParam(required = false) String nome,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String perfilNome,
-            Pageable pageable) {
-
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String perfilNome,
+        Pageable pageable
+    ) {
         Page<UsuarioDTO> page = usuarioService.listarFiltrado(nome, email, status, perfilNome, pageable);
         return ResponseEntity.ok(new PageResponse<>(page));
     }
